@@ -1,7 +1,9 @@
 library(dplyr)
 
-setwd("~/Desktop/UT/Master/Thesis/Code/")
+## set your WD
+setwd("~Set your Working Directory here")
 
+## set output directory
 outputDir <- "../Output/"
 
 # COVID data
