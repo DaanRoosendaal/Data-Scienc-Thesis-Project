@@ -1,8 +1,8 @@
 ### Title:    Cleaning Funda Scrape Data 
 ### Author:   Daan F. D. Roosendaal
-### ANR:      u599939 | SNR: ....
+### ANR:      u599939
 ### Created:  2021-04-17
-### Modified: 2021-............
+### Modified: 2021-05-25
 
 ###--------------------------------------------------------------------------###
 
@@ -15,36 +15,19 @@ library(tidyverse)
 library(caret)
 
 ## Set working directory 
-setwd("~/Desktop/UT/Master/Thesis/Code/")
+setwd("~Your Working Directory Here")
 
 ## Set Directories
 DataDir   <- "../Data/"
 outputDir <- "../Output/"
 
 ## Dataframe names 
-FileName1   <- "All_houses.csv"
-FileName2   <- "All_houses2.csv"
-# FileName1.1   <- "Amsterdam(page37).csv"
-# FileName1.2   <- "Amsterdam(page103).csv"
-# FileName2.1   <- "Eindhoven(page25).csv"
-# FileName2.2   <- "Eindhoven(page35).csv"
-# FileName3     <- "Rotterdam(page97).csv"
-# FileName4.1   <- "Amersfoort(page13).csv"
-# FileName5     <- "DenHaag.csv"
-# FileName6     <- "Utrecht.csv"
+FileName1   <- "All_houses.csv"   ## your scraped datasets 
+FileName2   <- "All_houses2.csv"  ## second DF if you made multiple scrapes
 
 ## Load Dataframes to Environment
 dat1  <- read.csv(paste0(DataDir, FileName1), row.names = 1)
 dat2  <- read.csv(paste0(DataDir, FileName2), row.names = 1)
-# datAms1.1   <- read.csv(paste0(DataDir, FileName1.1), row.names = 1)
-# datAms1.2   <- read.csv(paste0(DataDir, FileName1.2), row.names = 1)
-# datEind2.1  <- read.csv(paste0(DataDir, FileName2.1), row.names = 1)
-# datEind2.2  <- read.csv(paste0(DataDir, FileName2.2), row.names = 1)
-# datRot      <- read.csv(paste0(DataDir, FileName3), row.names = 1)
-# datAmr4.1   <- read.csv(paste0(DataDir, FileName4.1), row.names = 1)
-# datDHa      <- read.csv(paste0(DataDir, FileName5), row.names = 1)
-# datUt       <- read.csv(paste0(DataDir, FileName6), row.names = 1)
-
 
 
 ###--------------------------------------------------------------------------###
@@ -54,29 +37,17 @@ dat2  <- read.csv(paste0(DataDir, FileName2), row.names = 1)
 ## dropping too dirty and irrelevant columns
 ColDrop = c("opp", "HotWater", "RoofKind", "Levels", "bathroomFac", "homeKind")
 
+## Drop
 dat1 = dat1[, !names(dat1) %in% ColDrop]
 dat2 = dat2[, !names(dat2) %in% ColDrop]
-# datAms1.1   = datAms1.1[, !names(datAms1.1) %in% ColDrop]
-# datAms1.2   = datAms1.2[, !names(datAms1.2) %in% ColDrop]
-# datEind2.1  = datEind2.1[, !names(datEind2.1) %in% ColDrop]
-# datEind2.2  = datEind2.2[, !names(datEind2.2) %in% ColDrop]
-# datRot      = datRot[,!names(datRot) %in% ColDrop]
-# datAmr4.1   = datAmr4.1[, !names(datAmr4.1) %in% ColDrop]
-# datDHa      = datDHa[, !names(datDHa) %in% ColDrop]
-# datUt       = datUt[, !names(datUt) %in% ColDrop]
 
 ## Row Bind into one Dataframe 
-# datTot = rbind(datAms1.1, datAms1.2, datEind2.1, datEind2.2, 
-#                datRot, datAmr4.1, datDHa, datUt,
-#                stringsAsFactors = FALSE)
 datTot = rbind(dat1, dat2, stringsAsFactors = FALSE)
 
 # Backup Total Dataframe
 BackUp <- datTot
 
 ## Remove partial dataframes from environment
-# rm(datAmr4.1, datAms1.1, datAms1.2, datDHa, datEind2.1, 
-#    datEind2.2, datRot, datUt)
 rm(dat1, dat2)
 
 
@@ -172,8 +143,6 @@ datTot[NonAlpha_cols] = sapply(datTot[NonAlpha_cols], FUN = rm_NonAlpha)
 
 
 ## Cleaning ExStorage ##
-# separate on m, then make new 4th column adding all up
-# needs to be done AFTER non_alphanumeric characters deletion
 datTot <- datTot %>%
   separate(ExStorage, into = c("ExS1", "ExS2", "ExS3"), sep="m", remove = F)
 
@@ -189,7 +158,7 @@ datTot <- datTot %>%
 
 datTot <- datTot %>%
   mutate(ExStor_TOT = (ExS1 + ExS2 + ExS3))
-## can maybe be done in one function?
+
 ## delete older 4 columns
 
 
@@ -339,18 +308,18 @@ datTot = datTot %>%
 
 ## Clean City Column ##
 # make groups of 
-denBosch = c("Nuland", "Rosmalen", "Vinkel (Gem.") 
+denBosch   = c("Nuland", "Rosmalen", "Vinkel (Gem.") 
 middelburg = c("Arnemuiden") 
-tilburg = c("Berkel-Enschot", "Udenhout") 
-Utrecht =c("De Meern", "Haarzuilens", "Vleuten") 
-Groning = c("Garmerwolde", "Glimmen", "Haren (GR)", "(GR)", "Meerstad", 
+tilburg    = c("Berkel-Enschot", "Udenhout") 
+Utrecht    = c("De Meern", "Haarzuilens", "Vleuten") 
+Groning    = c("Garmerwolde", "Glimmen", "Haren (GR)", "(GR)", "Meerstad", 
             "Noordlaren", "Onnen", "Ten Boer", "Ten Post", "Winneweer")   
-DenHaag = c("Haag") 
-Rotterdam = c("Hoek van", "Hoogvliet Rotterdam", "Pernis Rotterdam",
+DenHaag    = c("Haag") 
+Rotterdam  = c("Hoek van", "Hoogvliet Rotterdam", "Pernis Rotterdam",
               "Rozenburg (ZH)")
 Amersfoort = c("Hoogland", "Hooglanderveen") 
-Amsterdam = c("Nieuw- en")
-Haarlem = c("Spaarndam gem.", "Ten Boer")
+Amsterdam  = c("Nieuw- en")
+Haarlem    = c("Spaarndam gem.", "Ten Boer")
 
 # function to simplify City column
 simplify_City = function(city_col) {
@@ -423,20 +392,6 @@ write.csv(datTot, paste0(outputDir, "MLR_data.csv"))
 
 ###--------------------------------------------------------------------------###
 
-## Action list ##
-
-# what to do with construction year?
-# make coldrop function to use for multiple column dropping. 
-# rename columns (after dummies) ? + delete old columns
-# delete mostly empty rows *
-# sanity checks before putting in the model
-
-# make some plots etc. 
-
-
-
-#for other columns
-#ifelse(col %in% pattern, 1, 0)
 
 
 
