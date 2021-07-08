@@ -1,5 +1,8 @@
-## Den Haag
-
+### Title:    Scraping Funda Data 
+### Author:   Daan F. D. Roosendaal
+### ANR:      u599939
+### Created:  2021-04-23
+### Modified: 2021-05-25
 ## scrapping multiple pages 
 
 ## preliminaries
@@ -7,7 +10,7 @@ library(rvest)
 library(dplyr)
 
 # set working Directory
-setwd("~/Desktop/UT/Master/Thesis/Code/")
+setwd("~/Your Directory Here")
 
 ## main page link
 #link = "https://www.funda.nl/koop/amsterdam/"
@@ -213,17 +216,13 @@ get_published_date = function(hous_link) {
 }
 
 
-
-
-
 ### Scraping all data form multiple pages + nested ###
-# Utrecht, Den Bosch, Middelburg, Zwolle, Tilburg, Haarlem
 ## create empty data frame
 All_houses2 = data.frame()
 
 ## function to scrape all data
 for(page_result in seq(from = 126, to = 153, by = 1)) {
-  link = paste0("https://www.funda.nl/koop/gemeente-utrecht,gemeente-middelburg,gemeente-zwolle,gemeente-tilburg,gemeente-haarlem,gemeente-den-bosch/p", page_result,"/")
+  link = paste0("PASTE FUNDA LINK HERE", page_result,"/")
   page = read_html(link)
   
   ## give algorithm a break so servers aren't stressed too much
@@ -249,14 +248,6 @@ for(page_result in seq(from = 126, to = 153, by = 1)) {
   PublishedDate = sapply(homes_links, FUN = get_published_date, USE.NAMES = FALSE)
   PublishedDate[length(PublishedDate) == 0] <- NA_character_
   PublishedDate = unlist(PublishedDate, use.names = FALSE)
-  
-  # postDate = sapply(homes_links, FUN = get_postDate, USE.NAMES = FALSE)
-  # postDate[lengths(postDate) == 0] <- NA_character_
-  # postDate = unlist(postDate, use.names = FALSE)
-  
-  # homeKind = sapply(homes_links, FUN = get_homeKind, USE.NAMES = FALSE)
-  # homeKind[lengths(homeKind) == 0] <- NA_character_
-  # homeKind = unlist(homeKind, use.names = FALSE)
   
   buildKind = sapply(homes_links, FUN = get_buildKind, USE.NAMES = FALSE)
   buildKind[lengths(buildKind) == 0] <- NA_character_
